@@ -1,0 +1,33 @@
+name: build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Use Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version-file: .nvmrc
+        registry-url: https://registry.npmjs.org/
+    - name: Install Dependencies and prepare packages
+      run: npm ci
+      env:
+        CI: true
+
+    - name: Lint
+      run: npm run lint
+
+    - name: Build
+      run: npm run build
+
+    - name: Tests
+      run: npm run test -- --coverage
